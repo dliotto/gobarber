@@ -1,31 +1,41 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
 
-import { MdShoppingBasket } from 'react-icons/md';
+import { Container, Content, Profile } from './styles';
 
-import { Container, Cart, Logo } from './styles';
+import Notifications from '~/components/Notifications';
 
-import logo from '../../assets/images/logo.png';
+import logo from '../../assets/logo-azul-n.svg';
 
-function Header({ cartSize }) {
+export default function Header() {
+    const profile = useSelector(state => state.user.profile);
+
     return (
         <Container>
-            <Link to="/">
-                <Logo src={logo} alt="HartShoes" />
-            </Link>
+            <Content>
+                <nav>
+                    <img src={logo} alt="GoBarber" />
+                    <Link to="/dashboard">DASHBOARD</Link>
+                </nav>
 
-            <Cart to="/cart">
-                <div>
-                    <strong>Meu carrinho</strong>
-                    <span>{cartSize} itens</span>
-                </div>
-                <MdShoppingBasket size={36} color="#fff" />
-            </Cart>
+                <aside>
+                    <Notifications />
+                    <Profile>
+                        <div>
+                            <strong>{profile.name}</strong>
+                            <Link to="/profile">Meu perfíl</Link>
+                        </div>
+                        <img
+                            src={
+                                profile.avatar.url ||
+                                'https://api.adorable.io/avatars/50/abott@adorable.png'
+                            }
+                            alt={profile.name}
+                        />
+                    </Profile>
+                </aside>
+            </Content>
         </Container>
     );
 }
-
-export default connect(state => ({
-    cartSize: state.cart.length,
-}))(Header);
